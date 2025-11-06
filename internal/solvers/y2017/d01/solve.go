@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"strings"
 
 	"github.com/ruben-vl/aoc-go/internal/solvers"
 )
@@ -14,32 +13,60 @@ func init() {
 }
 
 func Solve(part int, r io.Reader) (string, error) {
-	scanner := bufio.NewScanner(r)
-	var lines []string
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line != "" {
-			lines = append(lines, line)
-		}
+
+	line, err := readSingleLine(r)
+	if err != nil {
+		return "", err
 	}
-	if err := scanner.Err(); err != nil {
-		return "", fmt.Errorf("reading input: %w", err)
-	}
+	nums := digitsFromString(line)
 
 	switch part {
 	case 1:
-		return fmt.Sprintf("part 1: %d lines", len(lines)), nil
+		return fmt.Sprintf("Sum of consecutive equal values: %d", sumConsecutiveEqualValues(nums)), nil
 	case 2:
-		return fmt.Sprintf("part 2: reversed first line: %s", reverse(lines[0])), nil
+		return fmt.Sprintf("Sum of opposite equal values: %d", sumOppositeEqualValues(nums)), nil
 	default:
 		return "", fmt.Errorf("unknown part %d", part)
 	}
 }
 
-func reverse(s string) string {
-	runes := []rune(s)
-	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-		runes[i], runes[j] = runes[j], runes[i]
+func readSingleLine(r io.Reader) (string, error) {
+	scanner := bufio.NewScanner(r)
+	if !scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			return "", fmt.Errorf("reading input: %w", err)
+		}
+		return "", fmt.Errorf("no input line found")
 	}
-	return string(runes)
+	return scanner.Text(), nil
+}
+
+func digitsFromString(s string) []int {
+	out := make([]int, 0, len(s))
+	for _, ch := range s {
+		if ch >= '0' && ch <= '9' {
+			out = append(out, int(ch-'0'))
+		}
+	}
+	return out
+}
+
+func sumConsecutiveEqualValues(nums []int) int {
+	sum := 0
+	for i, n := range nums {
+		if n == nums[(i+1)%len(nums)] {
+			sum += n
+		}
+	}
+	return sum
+}
+
+func sumOppositeEqualValues(nums []int) int {
+	sum := 0
+	for i, n := range nums {
+		if n == nums[(i+len(nums)/2)%len(nums)] {
+			sum += n
+		}
+	}
+	return sum
 }
