@@ -1,11 +1,12 @@
 package d01
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 
 	"github.com/ruben-vl/aoc-go/internal/solvers"
+	"github.com/ruben-vl/aoc-go/internal/utils/input"
+	"github.com/ruben-vl/aoc-go/internal/utils/stringconv"
 )
 
 func init() {
@@ -14,11 +15,11 @@ func init() {
 
 func Solve(part int, r io.Reader) (string, error) {
 
-	line, err := readSingleLine(r)
+	line, err := input.ReadSingleLine(r)
 	if err != nil {
 		return "", err
 	}
-	nums := digitsFromString(line)
+	nums := stringconv.DigitsFromString(line)
 
 	switch part {
 	case 1:
@@ -28,27 +29,6 @@ func Solve(part int, r io.Reader) (string, error) {
 	default:
 		return "", fmt.Errorf("unknown part %d", part)
 	}
-}
-
-func readSingleLine(r io.Reader) (string, error) {
-	scanner := bufio.NewScanner(r)
-	if !scanner.Scan() {
-		if err := scanner.Err(); err != nil {
-			return "", fmt.Errorf("reading input: %w", err)
-		}
-		return "", fmt.Errorf("no input line found")
-	}
-	return scanner.Text(), nil
-}
-
-func digitsFromString(s string) []int {
-	out := make([]int, 0, len(s))
-	for _, ch := range s {
-		if ch >= '0' && ch <= '9' {
-			out = append(out, int(ch-'0'))
-		}
-	}
-	return out
 }
 
 func sumConsecutiveEqualValues(nums []int) int {
