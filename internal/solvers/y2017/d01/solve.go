@@ -1,12 +1,12 @@
 package d01
 
 import (
-	"bufio"
 	"fmt"
 	"io"
-	"strings"
 
 	"github.com/ruben-vl/aoc-go/internal/solvers"
+	"github.com/ruben-vl/aoc-go/internal/utils/input"
+	"github.com/ruben-vl/aoc-go/internal/utils/stringconv"
 )
 
 func init() {
@@ -14,32 +14,39 @@ func init() {
 }
 
 func Solve(part int, r io.Reader) (string, error) {
-	scanner := bufio.NewScanner(r)
-	var lines []string
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line != "" {
-			lines = append(lines, line)
-		}
+
+	line, err := input.ReadSingleLine(r)
+	if err != nil {
+		return "", err
 	}
-	if err := scanner.Err(); err != nil {
-		return "", fmt.Errorf("reading input: %w", err)
-	}
+	nums := stringconv.DigitsFromString(line)
 
 	switch part {
 	case 1:
-		return fmt.Sprintf("part 1: %d lines", len(lines)), nil
+		return fmt.Sprintf("Sum of consecutive equal values: %d", sumConsecutiveEqualValues(nums)), nil
 	case 2:
-		return fmt.Sprintf("part 2: reversed first line: %s", reverse(lines[0])), nil
+		return fmt.Sprintf("Sum of opposite equal values: %d", sumOppositeEqualValues(nums)), nil
 	default:
 		return "", fmt.Errorf("unknown part %d", part)
 	}
 }
 
-func reverse(s string) string {
-	runes := []rune(s)
-	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-		runes[i], runes[j] = runes[j], runes[i]
+func sumConsecutiveEqualValues(nums []int) int {
+	sum := 0
+	for i, n := range nums {
+		if n == nums[(i+1)%len(nums)] {
+			sum += n
+		}
 	}
-	return string(runes)
+	return sum
+}
+
+func sumOppositeEqualValues(nums []int) int {
+	sum := 0
+	for i, n := range nums {
+		if n == nums[(i+len(nums)/2)%len(nums)] {
+			sum += n
+		}
+	}
+	return sum
 }
