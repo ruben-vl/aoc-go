@@ -28,3 +28,15 @@ func NumbersFromString(s string) ([]int, error) {
 	}
 	return out, nil
 }
+
+func WordsFromString(s string) []string {
+	return strings.Fields(s)
+}
+
+func WordsFromStrings(ss []string) [][]string {
+	ws := make([][]string, 0, len(ss))
+	for _, s := range ss {
+		ws = append(ws, strings.Fields(s))
+	}
+	return ws
+}
