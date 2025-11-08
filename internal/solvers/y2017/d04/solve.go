@@ -3,6 +3,8 @@ package d04
 import (
 	"fmt"
 	"io"
+	"sort"
+	"strings"
 
 	"github.com/ruben-vl/aoc-go/internal/solvers"
 	"github.com/ruben-vl/aoc-go/internal/utils/input"
@@ -26,7 +28,7 @@ func Solve(part int, r io.Reader) (string, error) {
 	case 1:
 		return fmt.Sprintf("The number of valid passphrases is %d", numValidPassphrases(ppws)), nil
 	case 2:
-		return "", nil
+		return fmt.Sprintf("The number of valid passphrases is %d", numValidPassphrasesExtended(ppws)), nil
 	default:
 		return "", fmt.Errorf("unknown part %d", part)
 	}
@@ -51,4 +53,24 @@ func hasDuplicate(ss []string) bool {
 		elements.Add(s)
 	}
 	return false
+}
+
+func numValidPassphrasesExtended(ppws [][]string) int {
+	n := 0
+	for _, ppw := range ppws {
+		sortedStrings := make([]string, 0, len(ppw))
+		for _, s := range ppw {
+			sortedStrings = append(sortedStrings, sortChars(s))
+		}
+		if !hasDuplicate(sortedStrings) {
+			n += 1
+		}
+	}
+	return n
+}
+
+func sortChars(s string) string {
+	chars := strings.Split(s, "")
+	sort.Strings(chars)
+	return strings.Join(chars, "")
 }
