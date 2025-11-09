@@ -29,6 +29,18 @@ func NumbersFromString(s string) ([]int, error) {
 	return out, nil
 }
 
+func NumbersFromStrings(ss []string) ([][]int, error) {
+	out := make([][]int, 0)
+	for _, s := range ss {
+		nums, err := NumbersFromString(s)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, nums)
+	}
+	return out, nil
+}
+
 func WordsFromString(s string) []string {
 	return strings.Fields(s)
 }

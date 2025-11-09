@@ -13,6 +13,7 @@ import (
 	_ "github.com/ruben-vl/aoc-go/internal/solvers/y2017/d01"
 	_ "github.com/ruben-vl/aoc-go/internal/solvers/y2017/d02"
 	_ "github.com/ruben-vl/aoc-go/internal/solvers/y2017/d04"
+	_ "github.com/ruben-vl/aoc-go/internal/solvers/y2017/d05"
 )
 
 func main() {
